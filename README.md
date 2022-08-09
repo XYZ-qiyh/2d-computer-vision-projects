@@ -1,6 +1,6 @@
 # 2d-computer-vision-projects
 
-+ image classification
-+ object detection
-+ image segmentation
-+ multi-object tracking
++ 图像分类
++ 目标检测
++ 图像分割
++ 目标跟踪
