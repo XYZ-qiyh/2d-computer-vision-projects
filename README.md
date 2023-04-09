@@ -7,4 +7,4 @@
 + 图像分割 --> 前景/背景分割 --> Remove.bg
   + [matterport/Mask_RCNN](https://github.com/matterport/Mask_RCNN)
 + 目标跟踪 --> 多目标跟踪 --> DeepSORT
-+ 图像风格化：TODO
+  + [nwojke/deep_sort](https://github.com/nwojke/deep_sort)

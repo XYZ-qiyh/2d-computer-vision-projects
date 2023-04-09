@@ -59,15 +59,9 @@ def train():
 
             cnt += 1
 
-
             print("epoch: {}, idx: {}, train_loss: {}".format(epoch, cnt*batch_size, loss))
 
         torch.save(model.state_dict(), "./ckpt/{:0>6}.pth".format(epoch))
-
-
-
-
-
 
 
 if __name__ == "__main__":
