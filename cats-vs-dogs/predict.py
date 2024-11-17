@@ -8,35 +8,40 @@ import cv2
 import numpy as np
 from PIL import Image
 import argparse
+import time
 
-os.environ["CUDA_VISIBLE_DEVICES"] = "3"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 def predict(image_path=None):
     # model
     model = Net().cuda()
     model = nn.DataParallel(model)
-    model.load_state_dict(torch.load(model_ckpt))
+    model.load_state_dict(torch.load(model_ckpt, weights_only=True))
     model.eval()
 
     image = Image.open(image_path)
     image = np.array(image, dtype=np.float32) / 255.0
     image = cv2.resize(image, (200, 200))
     input = torch.from_numpy(image).unsqueeze(0).permute(0, 3, 1, 2)
-    print(input.size())
+    # print(input.size())
 
     # inference
+    start_t = time.time()
     out = model(input)
     #print(out.size())
-    # print(out)
+    runtime = time.time() - start_t
+    print("runtime: {}".format(runtime))
 
     # parse output
     out = F.softmax(out, dim=1)
     out = out.cpu().detach().numpy().copy()
+    prob = np.max(out, axis=1)
     label_id = np.argmax(out, axis=1)
     label = "cat" if label_id == 0 else "dog"
-    print("predict: {}".format(label))
+    print("predict: [{}] with prob: {}".format(label, prob))
 
-    save_results(image_path=image_path, label=label)
+    if args.save_results:
+        save_results(image_path=image_path, label=label)
 
 
 def save_results(image_path, label):    
@@ -75,6 +80,7 @@ if __name__ == "__main__":
     # parse argument
     parser = argparse.ArgumentParser()
     parser.add_argument("image_path")
+    parser.add_argument('--save_results', action='store_true', help='Read image to check whether it is ok')
     args = parser.parse_args()
     image_path = args.image_path
 
